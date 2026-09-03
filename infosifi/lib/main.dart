@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:infosifi/view/login.dart';
+import 'package:infosifi/view/home.dart';
+import 'package:infosifi/view/historico.dart';
+import 'package:infosifi/view/novoTeste.dart';
+import 'package:infosifi/view/main.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,14 +17,15 @@ class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(1, 123, 0, 255)),
-          useMaterial3: true
-          ),
-
-      home: LoginView(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginView(),
+        '/home': (context) => const HomeView(),
+        '/historico': (context) => const Historico(), 
+        '/novoTeste': (context) => const Novoteste(),
+        '/mainView': (context) => const MainView(),
+      },
 
     );
   }

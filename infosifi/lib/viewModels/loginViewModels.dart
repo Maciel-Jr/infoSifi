@@ -14,7 +14,7 @@ class LoginViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isSuccess => _isSuccess;
 
-  Future<void> login(String username, String password) async {
+  Future<bool> login(String username, String password) async {
     _isLoading = true;
     _errorMessage = null;
     _isSuccess = false;
@@ -23,16 +23,16 @@ class LoginViewModel extends ChangeNotifier {
     try {
       final success = await _authService.login(username.trim(), password);
 
-      String nome = username.trim();
-      String passwordString = password;
-
       if (success) {
         _isSuccess = true;
+        return true;
       } else {
-        _errorMessage = 'Usuário ou senha inválidos. nome: $nome, senha: $passwordString';
+        _errorMessage = 'Usuário ou senha inválidos';
+        return false;
       }
     } catch (e) {
       _errorMessage = 'Erro ao conectar ao servidor. Verifique a rede.';
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();

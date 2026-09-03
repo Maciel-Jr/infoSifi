@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../viewModels/loginViewModels.dart';
 
+
+
+
+
+
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -36,11 +41,6 @@ class _LoginViewState extends State<LoginView> {
         ),
       );
     }
-
-    // Redireciona se o login teve sucesso
-    if (_viewModel.isSuccess && mounted) {
-      Navigator.of(context).pushReplacementNamed('/home');
-    }
   }
 
   @override
@@ -52,15 +52,20 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState?.validate() ?? false) {
       // Fecha o teclado
       FocusScope.of(context).unfocus();
       // Executa a ação na ViewModel
-      _viewModel.login(
+      final success = await _viewModel.login(
         _emailController.text,
         _passwordController.text,
       );
+
+      if (success && mounted) {
+        Navigator.of(context).pushReplacementNamed('/mainView'); // Navega para a tela principal
+      }
+      
     }
   }
 
@@ -81,18 +86,9 @@ class _LoginViewState extends State<LoginView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                    ),
+                    
 
-                    const SizedBox(height: 30),
-
+                    
                     const Text(
                       'Acesso profissional',
                       textAlign: TextAlign.center,

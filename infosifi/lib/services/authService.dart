@@ -23,8 +23,7 @@ class Authservice {
         body: jsonEncode({'username': username, 'password': password}),
     );
 
-
-    ////////////////////////////////////////////////
+    // Log básico da requisição/ resposta para debug
     final Map<String, dynamic> requestPayload = {
       'username': username,
       'password': password,
@@ -32,22 +31,67 @@ class Authservice {
 
     final String jsonBody = jsonEncode(requestPayload);
 
-    debugPrint('--- [REQUISIÇÃO LOGIN] ---');
-    debugPrint('URL: ${ApiConstants.login}');
-    debugPrint('Payload enviado: $jsonBody');
-    debugPrint('--------------------------');
-    ////////////////////////////////////////////////
+ 
+    if (response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body);
 
-    if(response.statusCode == 200){
-      final data = jsonDecode(response.body);
-      final auth = AuthResponse.fromJson(data);
+        String? accessToken;
+        String? refreshToken;
 
-      //Gravar os dois tokens com criptografia local
+        // helper to try extract tokens from a map (checks common key names and substring matches)
+        void extractFromMap(Map map) {
+          map.forEach((k, v) {
+            final key = k.toString().toLowerCase();
+            if (accessToken == null) {
+              if (key == 'access' || key == 'access_token' || key == 'token' || key.contains('access')) {
+                accessToken = v?.toString();
+              }
+            }
+            if (refreshToken == null) {
+              if (key == 'refresh' || key == 'refresh_token' || key.contains('refresh')) {
+                refreshToken = v?.toString();
+              }
+            }
+          });
+        }
 
-      await _storage.write(key: _accessTokenKey, value: auth.accessToken);
-      await _storage.write(key: _refreshTokenKey, value: auth.refreshToken); 
+        if (data is Map) {
+          extractFromMap(data.cast<String, dynamic>());
 
-      return true; 
+          // common case: tokens inside a `data` key
+          if ((accessToken == null || refreshToken == null) && data['data'] is Map) {
+            extractFromMap((data['data'] as Map).cast<String, dynamic>());
+          }
+
+          // try to find nested map containing tokens
+          if ((accessToken == null || refreshToken == null)) {
+            for (final v in data.values) {
+              if (v is Map) {
+                extractFromMap(v.cast<String, dynamic>());
+                if (accessToken != null && refreshToken != null) break;
+              }
+            }
+          }
+        }
+
+        if (accessToken != null && refreshToken != null) {
+          // Gravar os dois tokens com criptografia local
+          await _storage.write(key: _accessTokenKey, value: accessToken);
+          await _storage.write(key: _refreshTokenKey, value: refreshToken);
+
+          return true;
+        } else {
+          debugPrint('[AuthService] Tokens não encontrados na resposta de login.');
+          debugPrint('[AuthService] Body recebido: ${response.body}');
+          return false;
+        }
+      } catch (e, st) {
+        debugPrint('[AuthService] Erro ao parsear JSON da resposta de login: $e');
+        debugPrint(st.toString());
+        debugPrint('[AuthService] Body recebido: ${response.body}');
+        return false;
+      }
     }
 
     return false;
