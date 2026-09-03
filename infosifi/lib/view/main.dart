@@ -42,13 +42,13 @@ class _MainViewState extends State<MainView> {
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
+            icon: Icon(Icons.add_box_outlined),
+            selectedIcon: Icon(Icons.add_box_rounded),
             label: 'Novo Teste',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.history),
+            selectedIcon: Icon(Icons.history_outlined),
             label: 'Histórico',
           ),
         ],
