@@ -1,45 +1,19 @@
 import 'package:flutter/material.dart';
 import '../services/authService.dart';
-import 'login.dart';
 
-class Novoteste extends StatelessWidget {
-  const Novoteste({super.key});
 
-  
+class Dadosdoteste extends StatelessWidget {
+  const Dadosdoteste({super.key});
 
-  void _handleLogout(BuildContext context) async {
-    final authService = Authservice();
-    await authService.logout();
+  void _fotoTeste(BuildContext context) {
+      Navigator.of(context).pushReplacementNamed('/fotoTeste'); 
 
-    if (context.mounted) {
-      // Remove todas as rotas e volta para o login
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LoginView()),
-        (route) => false,
-      );
-    }
   }
-
-  void _iniciarTeste(BuildContext context) {
-      Navigator.of(context).pushReplacementNamed('/dadosDoTeste'); 
-
-  } 
-
-  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Novo Teste'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            tooltip: 'Sair',
-            onPressed: () => _handleLogout(context),
-          ),
-        ],
-      ),
+      
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -50,31 +24,38 @@ class Novoteste extends StatelessWidget {
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Nome do Paciente',
+                  labelText: 'Tipo de Teste',
               ),),
               SizedBox(height: 16,),
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Data de Nascimento',
+                  labelText: 'Lote',
               ),),
               SizedBox(height: 16,),
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Whatsapp',
+                  labelText: 'Validade',
               ),),
               SizedBox(height: 16,),
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Codigo do Atendimento',
+                  labelText: 'Data/Hora da Realização',
+              ),),
+              SizedBox(height: 16,),
+              TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Profissional Responsável',
               ),),
 
-              TextButton(onPressed: () => _iniciarTeste(context), child: Text('Iniciar Teste'))
+              TextButton(onPressed: (()=>{_fotoTeste(context)}), child: Text('Fotografe o Teste'))
             ],
           ),
         ),

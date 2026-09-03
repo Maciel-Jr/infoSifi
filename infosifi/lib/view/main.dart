@@ -18,7 +18,7 @@ class _MainViewState extends State<MainView> {
   final List<Widget> _pages = const [
     HomeView(),
     Novoteste(),
-    Historico(),
+    Historico()
   ];
 
   @override

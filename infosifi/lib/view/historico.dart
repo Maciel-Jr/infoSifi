@@ -23,7 +23,7 @@ class Historico extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Início'),
+        title: const Text('Histórico'),
         actions: [
           IconButton(
             icon: const Icon(Icons.exit_to_app),
