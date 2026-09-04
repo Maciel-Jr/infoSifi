@@ -47,6 +47,13 @@ class _CameraViewState extends State<Fototeste> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pushReplacementNamed(
+            context,
+            '/dadosDoTeste',
+          ),
+        ),
         title: const Text('Capturar Foto'),
       ),
       body: Center(
