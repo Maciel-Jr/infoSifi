@@ -16,6 +16,11 @@ class _DadosdotesteState extends State<Dadosdoteste> {
     Navigator.of(context).pushReplacementNamed('/fotoTeste');
   }
 
+  void _voltarParaNovoTeste(BuildContext context) {
+    // Redireciona e limpa a pilha até a rota desejada
+    Navigator.of(context).pushNamedAndRemoveUntil('/mainView', (route) => false, arguments: 1); // faz voltar para a tela de novo teste (index 1)
+  } 
+
   Future<void> _selecionarValidade(BuildContext context) async {
     final data = await showDatePicker(
       context: context,
@@ -52,13 +57,21 @@ class _DadosdotesteState extends State<Dadosdoteste> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false, // Bloqueia o fechamento padrão da tela
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+
+        // Executa a navegação personalizada quando o usuário aperta <
+        _voltarParaNovoTeste(context);
+      },
+      child: Scaffold(
       backgroundColor: const Color(0xFFFFF8FF),
 
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushReplacementNamed(context, '/novoTeste'),
+          onPressed: () => Navigator.pushReplacementNamed(context, '/mainView'),
         ),
       ),
 
@@ -202,6 +215,7 @@ class _DadosdotesteState extends State<Dadosdoteste> {
           ),
         ),
       ),
+    )
     );
   }
 }

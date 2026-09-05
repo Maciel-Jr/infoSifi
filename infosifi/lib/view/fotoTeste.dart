@@ -13,6 +13,11 @@ class _CameraViewState extends State<Fototeste> {
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
 
+  void _voltarParadadosDoTeste(BuildContext context) {
+    // Redireciona e limpa a pilha até a rota desejada
+    Navigator.of(context).pushNamedAndRemoveUntil('/dadosDoTeste', (route) => false); 
+  } 
+
   // Função para abrir a câmera nativa
   Future<void> _takePhoto() async {
     final XFile? photo = await _picker.pickImage(
@@ -45,7 +50,18 @@ class _CameraViewState extends State<Fototeste> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false, // Bloqueia o fechamento padrão da tela
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+
+        // Executa a navegação personalizada quando o usuário aperta <
+        _voltarParadadosDoTeste(context);
+      },
+      
+      child: 
+    
+      Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -117,6 +133,7 @@ class _CameraViewState extends State<Fototeste> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

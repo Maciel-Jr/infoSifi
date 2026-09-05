@@ -136,4 +136,25 @@ class Authservice {
     await _storage.deleteAll();
   }
 
+  Future<bool> isAuthenticated() async {
+    final token = await getAcessToken();
+    return token != null && token.isNotEmpty;
+  }
 }
+
+/*
+Future<bool> uploadImage(File imageFile, String token) async {
+  final request = http.MultipartRequest(
+    'POST',
+    Uri.parse('http://192.168.x.x:8000/api/upload/'),
+  );
+
+  request.headers['Authorization'] = 'Bearer $token';
+  request.files.add(
+    await http.MultipartFile.fromPath('foto', imageFile.path),
+  );
+
+  final response = await request.send();
+  return response.statusCode == 201 || response.statusCode == 200;
+}
+*/
