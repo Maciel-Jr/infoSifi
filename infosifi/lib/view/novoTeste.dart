@@ -42,14 +42,25 @@ class Novoteste extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 100),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
+              Text(
+                'Novo atendimento',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF4A148C),
+                ),
+              ),
+
+              const SizedBox(height: 13),
+
               Column(
                 children: [
                   const Icon(
                     Icons.add,
-                    size: 20,
+                    size: 16,
                     color: Color(0xFF6A1B9A),
                   ),
                   const Icon(
@@ -60,18 +71,7 @@ class Novoteste extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height: 13),
-
-              Text(
-                'Novo atendimento',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF4A148C),
-                ),
-              ),
-
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               TextField(
                 decoration: InputDecoration(
