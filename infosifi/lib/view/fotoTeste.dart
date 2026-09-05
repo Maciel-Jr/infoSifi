@@ -59,81 +59,249 @@ class _CameraViewState extends State<Fototeste> {
         _voltarParadadosDoTeste(context);
       },
       
-      child: 
+      child:
     
       Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          tooltip: '',
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pushReplacementNamed(
             context,
             '/dadosDoTeste',
           ),
         ),
-        title: const Text('Capturar Foto'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        body: Column(
             children: [
-              // Área de exibição da imagem
-              Container(
-                width: 280,
-                height: 280,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade400),
-                ),
-                child: _imageFile != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Image.file(
-                          _imageFile!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
-                        ),
-                      )
-                    : const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+              Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.camera_alt_outlined, size: 64, color: Colors.grey),
-                          SizedBox(height: 8),
-                          Text('Nenhuma foto capturada', style: TextStyle(color: Colors.grey)),
-                        ],
+                          const Text(
+                            'Fotografe o teste',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color(0xFF4A148C),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          const Text(
+                            'Posicione o teste dentro da área indicada.',
+                            textAlign: TextAlign.center,
+                          ),
+
+              const SizedBox(height: 20),
+
+              Stack(
+                children: [
+                  Container(
+                    width: 320,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey.shade400),
+                    ),
+                    child: _imageFile != null
+                        ? ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.file(
+                        _imageFile!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
                       ),
-              ),
-              const SizedBox(height: 32),
+                    )
+                        : const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.camera_alt_outlined,
+                          size: 64,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Nenhuma foto capturada',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
 
-              // Botão para tirar foto
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton.icon(
-                  onPressed: _takePhoto,
-                  icon: const Icon(Icons.photo_camera),
-                  label: const Text('Tirar Foto com a Câmera'),
-                ),
+                  Positioned(
+                    left: 12,
+                    top: 12,
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                            color: Color(0xFF6A1B9A),
+                            width: 2,
+                          ),
+                          top: BorderSide(
+                            color: Color(0xFF6A1B9A),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 12,
+                    top: 12,
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                            color: Color(0xFF6A1B9A),
+                            width: 2,
+                          ),
+                          top: BorderSide(
+                            color: Color(0xFF6A1B9A),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 12,
+                    bottom: 12,
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                            color: Color(0xFF6A1B9A),
+                            width: 2,
+                          ),
+                          bottom: BorderSide(
+                            color: Color(0xFF6A1B9A),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 12,
+                    bottom: 12,
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                            color: Color(0xFF6A1B9A),
+                            width: 2,
+                          ),
+                          bottom: BorderSide(
+                            color: Color(0xFF6A1B9A),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 12),
 
-              // Botão alternativo para galeria
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton.icon(
-                  onPressed: _pickFromGallery,
-                  icon: const Icon(Icons.photo_library),
-                  label: const Text('Escolher da Galeria'),
-                ),
+              //const Text(
+                //'Mantenha o teste na posição horizontal.',
+                //textAlign: TextAlign.center,
+                //style: TextStyle(
+                  //color: Colors.grey,
+                  //fontSize: 14,
+                //),
+              //),
+
+              const SizedBox(height: 8),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.lightbulb_outline,
+                    color: Colors.purple,
+                    size: 22,
+                  ),
+
+                  const SizedBox(width: 6),
+
+                  const Text(
+                    'Boa iluminação, sem sombra e fundo escuro.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.purple,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ),
       ),
+    ),
+  ),
+
+              Container(
+                width: double.infinity,
+                height: 75,
+                color: const Color(0xFF4A148C),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 76,
+                      height: 76,
+                      child: ElevatedButton(
+                        onPressed: _takePhoto,
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(
+                            side: const BorderSide(
+                              color: Color(0xFF4A148C),
+                              width: 3,
+                            ),
+                          ),
+                          padding: EdgeInsets.zero,
+                        ),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          size: 32,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 24,
+                      child: IconButton(
+                        onPressed: _pickFromGallery,
+                        icon: const Icon(
+                          Icons.photo_library,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+        ),
       ),
     );
   }
