@@ -243,12 +243,14 @@ class _CameraViewState extends State<Fototeste> {
 
                   const SizedBox(width: 6),
 
-                  const Text(
-                    'Boa iluminação, sem sombra e fundo escuro.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.purple,
-                      fontSize: 16,
+                  Flexible(
+                    child: Text(
+                      'Boa iluminação, sem sombra e fundo escuro.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.purple,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ],
