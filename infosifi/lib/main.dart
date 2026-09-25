@@ -4,8 +4,6 @@ import 'package:infosifi/view/home.dart';
 import 'package:infosifi/view/historico.dart';
 import 'package:infosifi/view/novoTeste.dart';
 import 'package:infosifi/view/main.dart';
-import 'package:infosifi/view/dadosDoTeste.dart';
-import 'package:infosifi/view/fotoTeste.dart';
 import 'services/authService.dart';
 
 void main() {
@@ -31,9 +29,6 @@ class MyApp extends StatelessWidget{
         '/historico': (context) => const Historico(), 
         '/novoTeste': (context) => const Novoteste(),
         '/mainView': (context) => const MainView(),
-        '/dadosDoTeste': (context) => const Dadosdoteste(),
-        '/fotoTeste': (context) => const Fototeste(),
-
       },
       home: FutureBuilder<bool>(
         future: authService.isAuthenticated(),

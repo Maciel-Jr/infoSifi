@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import '../viewModels/loginViewModels.dart';
-
-
-
-
-
+import 'cadastro_acesso.dart';
+import 'esqueci_senha.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -63,9 +60,10 @@ class _LoginViewState extends State<LoginView> {
       );
 
       if (success && mounted) {
-        Navigator.of(context).pushReplacementNamed('/mainView'); // Navega para a tela principal
+        Navigator.of(
+          context,
+        ).pushReplacementNamed('/mainView'); // Navega para a tela principal
       }
-      
     }
   }
 
@@ -77,18 +75,13 @@ class _LoginViewState extends State<LoginView> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 380,
-              ),
+              constraints: const BoxConstraints(maxWidth: 380),
               child: Form(
                 key: _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    
-
-                    
                     const Text(
                       'Acesso profissional',
                       textAlign: TextAlign.center,
@@ -133,8 +126,9 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility_off : Icons
-                                .visibility,
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
                           ),
                           onPressed: () {
                             setState(() {
@@ -153,13 +147,15 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     const SizedBox(height: 24),
 
-                    const Text(
-                      'Esqueceu sua senha?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFF4B168C),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const EsqueciSenhaView(),
+                          ),
+                        ),
+                        child: const Text('Esqueci minha senha'),
                       ),
                     ),
 
@@ -182,40 +178,46 @@ class _LoginViewState extends State<LoginView> {
                             onPressed: _viewModel.isLoading ? null : _submit,
                             child: _viewModel.isLoading
                                 ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
                                 : const Text(
-                                'Entrar', style: TextStyle(fontSize: 16)),
+                                    'Entrar',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                           ),
                         );
                       },
                     ),
-                  const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-                  Row(
-                    children: [
-                      const Expanded(
-                        child: Divider(),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
-                          'ou entre com',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 13,
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            'ou entre com',
+                            style: TextStyle(color: Colors.grey, fontSize: 13),
                           ),
                         ),
-                      ),
-                      const Expanded(
-                        child: Divider(),
-                      ),
-                    ],
-                  ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
 
                     const SizedBox(height: 24),
+
+                    OutlinedButton(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CadastroAcessoView(),
+                        ),
+                      ),
+                      child: const Text('CRIAR NOVO ACESSO'),
+                    ),
 
                     const Icon(
                       Icons.fingerprint,
@@ -228,10 +230,7 @@ class _LoginViewState extends State<LoginView> {
                     const Text(
                       'Biometria',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.black, fontSize: 14),
                     ),
                   ],
                 ),

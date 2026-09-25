@@ -1,221 +1,159 @@
 import 'package:flutter/material.dart';
-import '../services/authService.dart';
-
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:flutter/services.dart';
+import '../viewModels/novoTesteViewModels.dart';
+import 'fotoTeste.dart';
 
 class Dadosdoteste extends StatefulWidget {
-  const Dadosdoteste({super.key});
+  const Dadosdoteste({
+    super.key,
+    required this.viewModel,
+    required this.nomePaciente,
+    required this.dataNascimento,
+    required this.whatsapp,
+    required this.codigoAtendimento,
+  });
+  final NovoTesteViewModel viewModel;
+  final String nomePaciente;
+  final String dataNascimento;
+  final String whatsapp;
+  final String codigoAtendimento;
 
   @override
   State<Dadosdoteste> createState() => _DadosdotesteState();
 }
 
 class _DadosdotesteState extends State<Dadosdoteste> {
-  final TextEditingController _validadeController = TextEditingController();
-  final TextEditingController _dataHoraController = TextEditingController();
-  void _fotoTeste(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed('/fotoTeste');
+  final _lote = TextEditingController();
+  final _validade = TextEditingController();
+  final _realizacao = TextEditingController();
+  final _profissional = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String _tipoTeste = 'Teste Rápido Sífilis';
+
+  @override
+  void initState() {
+    super.initState();
+    final hoje = DateTime.now();
+    _realizacao.text =
+        '${hoje.day.toString().padLeft(2, '0')}/${hoje.month.toString().padLeft(2, '0')}/${hoje.year}';
   }
 
-  void _voltarParaNovoTeste(BuildContext context) {
-    // Redireciona e limpa a pilha até a rota desejada
-    Navigator.of(context).pushNamedAndRemoveUntil('/mainView', (route) => false, arguments: 1); // faz voltar para a tela de novo teste (index 1)
-  } 
-
-  Future<void> _selecionarValidade(BuildContext context) async {
-    final data = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2100),
-    );
-    if (data != null) {
-      _validadeController.text =
-      '${data.day.toString().padLeft(2, '0')}/${data.month.toString().padLeft(2, '0')}/${data.year}';
-    }
+  @override
+  void dispose() {
+    _lote.dispose();
+    _validade.dispose();
+    _realizacao.dispose();
+    _profissional.dispose();
+    super.dispose();
   }
 
-  Future<void> _selecionarDataHora(BuildContext context) async {
-    final data = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2100),
+  void _continuar() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    widget.viewModel.definirDados(
+      nomePaciente: widget.nomePaciente,
+      dataNascimento: widget.dataNascimento,
+      whatsapp: widget.whatsapp,
+      codigoAtendimento: widget.codigoAtendimento,
+      tipoTeste: _tipoTeste,
+      lote: _lote.text.trim(),
+      validade: _validade.text.trim(),
+      dataRealizacao: _realizacao.text.trim(),
+      profissionalResponsavel: _profissional.text.trim(),
     );
-
-    if (data == null) return;
-
-    final hora = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => Fototeste(viewModel: widget.viewModel)),
     );
-
-    if (hora == null) return;
-
-    _dataHoraController.text =
-    '${data.day.toString().padLeft(2, '0')}/${data.month.toString().padLeft(2, '0')}/${data.year} ${hora.hour.toString().padLeft(2, '0')}:${hora.minute.toString().padLeft(2, '0')}';
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false, // Bloqueia o fechamento padrão da tela
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-
-        // Executa a navegação personalizada quando o usuário aperta <
-        _voltarParaNovoTeste(context);
-      },
-      child: Scaffold(
-      backgroundColor: const Color(0xFFFFF8FF),
-
+    return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushReplacementNamed(context, '/mainView'),
-        ),
+        leading: BackButton(onPressed: () => Navigator.pop(context)),
       ),
-
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Dados do teste',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF4A148C),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-              const Icon(
-                Icons.medication_outlined,
-                size: 60,
-                color: Color(0xFF6A1B9A),
-              ),
-
-              const SizedBox(height: 30),
-
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Tipo de Teste',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+      backgroundColor: const Color(0xFFFFF8FF),
+      body: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const Text(
+                  'Dados do teste',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF4A148C),
                   ),
                 ),
-                items: const [
-                  DropdownMenuItem(
-                    value: 'Treponêmico',
-                    child: Text('Treponêmico'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Não treponêmico',
-                    child: Text('Não treponêmico'),
-                  ),
-                ],
-                onChanged: (value) {},
-              ),
-
-              SizedBox(height: 16),
-
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Lote',
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                const SizedBox(height: 24),
+                DropdownButtonFormField<String>(
+                  initialValue: _tipoTeste,
+                  decoration: _decoration('Tipo de teste'),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'Teste Rápido Sífilis',
+                      child: Text('Teste Rápido Sífilis'),
+                    ),
+                  ],
+                  onChanged: (value) => setState(() => _tipoTeste = value!),
                 ),
-              ),
-
-              const SizedBox(height: 16),
-
-              TextField(
-                controller: _validadeController,
-                readOnly: true,
-                onTap: () => _selecionarValidade(context),
-                decoration: InputDecoration(
-                  labelText: 'Validade',
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                _field(_lote, 'Lote', maxLength: 15),
+                _field(_validade, 'Validade (dd/MM/aaaa)', mask: '##/##/####'),
+                _field(
+                  _realizacao,
+                  'Data de realização (dd/MM/aaaa)',
+                  mask: '##/##/####',
+                  keyboardType: TextInputType.number,
                 ),
-              ),
-
-              SizedBox(height: 16,),
-
-              TextField(
-                controller: _dataHoraController,
-                readOnly: true,
-                onTap: () => _selecionarDataHora(context),
-                decoration: InputDecoration(
-                  labelText: 'Data/Hora da Realização',
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                _field(
+                  _profissional,
+                  'Profissional responsável',
+                  maxLength: 100,
                 ),
-              ),
-
-              SizedBox(height: 16),
-
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Profissional Responsável',
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-
-                items: const [
-                  DropdownMenuItem(
-                    value: 'Profissional 1',
-                    child: Text('Profissional 1'),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Profissional 2',
-                    child: Text('Profissional 2'),
-                  ),
-                ],
-                onChanged: (value) {},
-              ),
-
-              const SizedBox(height: 24),
-
-              ElevatedButton(
-                onPressed: () => _fotoTeste(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6A1B9A),
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(220, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text('FOTOGRAFAR TESTE'),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            onPressed: _continuar,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF6A1B9A),
+              foregroundColor: Colors.white,
+              minimumSize: const Size(220, 50),
+            ),
+            child: const Text('FOTOGRAFAR TESTE'),
+          ),
+        ],
       ),
-    )
     );
   }
+
+  Widget _field(
+    TextEditingController controller,
+    String label, {
+    String? mask,
+    int? maxLength,
+    TextInputType? keyboardType,
+  }) => Padding(
+    padding: const EdgeInsets.only(top: 16),
+    child: TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      maxLength: maxLength,
+      inputFormatters: [
+        if (mask != null) MaskTextInputFormatter(mask: mask),
+        if (maxLength != null) LengthLimitingTextInputFormatter(maxLength),
+      ],
+      decoration: _decoration(label),
+      validator: (value) =>
+          value == null || value.trim().isEmpty ? 'Campo obrigatório' : null,
+    ),
+  );
+  InputDecoration _decoration(String label) => InputDecoration(
+    labelText: label,
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+  );
 }
