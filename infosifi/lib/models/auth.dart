@@ -1,5 +1,3 @@
-
-
 class AuthResponse {
   final String refreshToken;
   final String accessToken;
@@ -8,11 +6,9 @@ class AuthResponse {
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
     return AuthResponse(
-      refreshToken: json['refreshToken'],
-      accessToken: json['accessToken'],
+      refreshToken: '${json['refreshToken'] ?? json['refresh_token'] ?? ''}',
+      accessToken:
+          '${json['accessToken'] ?? json['access_token'] ?? json['access'] ?? json['token'] ?? ''}',
     );
   }
-
-
-
 }
